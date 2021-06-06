@@ -3,7 +3,7 @@
  Sketch for the OpenEnergyMonitor EmonTX Arduino Shield which monitors
  input CT1 & a single DS18B20 temperature probe and sends the data to an EmonCMS 
  server via an Huzzah ESP8266 WiFi module instead of using the more traditional 
- RFM69CW RF Module
+ RFM69CW RF Module. The ESP8266 is running the EmonESP firmware.
  
  Authored By: Martin Sidgreaves
  Part of the openenergymonitor.org project
@@ -13,13 +13,13 @@
  
  OpenEnergyMonitor:     http://openenergymonitor.org/
  emonTx documentation: 	http://openenergymonitor.org/emon/modules/emontxshield/
-
+ emonESP Firmware:      https://github.com/openenergymonitor/EmonESP
 
  THIS SKETCH REQUIRES:
 
  Libraries in the standard arduino libraries folder:
 
-  - EmonLib		          -   https://github.com/openenergymonitor/EmonLib.git
+  - EmonLib		        -   https://github.com/openenergymonitor/EmonLib.git
   - DallasTemperature   -   https://github.com/milesburton/Arduino-Temperature-Control-Library
   - OneWire             -   https://github.com/PaulStoffregen/OneWire
 
