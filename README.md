@@ -31,6 +31,10 @@
 
   - __OneWire__             -   https://github.com/PaulStoffregen/OneWire
 
+  Also included in the '3D Printed Enclosure' folder is a  .STL file and the original Fustion 360 file for an 
+  enclosure I designed to house the Arduino & Shield. The hole in the side was incorporated to allow for a DS18B20
+  probe to be added.
+
 ------------------------------------------------------------------------------------------------------------
 Connections between EmonTX & ESP8266
 
@@ -44,4 +48,4 @@ Connections between EmonTX & ESP8266
 
 -------------------------------------------------------------------------------------------------------------
 
-Version :: v1.0.1
+Version :: v1.0.2
