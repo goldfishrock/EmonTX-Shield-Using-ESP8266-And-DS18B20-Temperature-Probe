@@ -1,0 +1,45 @@
+Running Connections for normal operation
+
+EmonTX
+Blue 1
+Green 3
+Orange 5
+
+ESP32
+Blue 1
+Green3
+Orange 4
+
+
+
+To conenct FTDI
+
+FTDI
+5v 1
+GND 2
+Tx 3
+Rx 4
+
+ESP32
+GND 2
+V+ 1
+Rx 3
+Tx 4
+
+
+To update firmware
+==================
+
+Download firmware from
+https://github.com/openenergymonitor/EmonESP/releases
+
+Download ESPTOOL from
+https://github.com/espressif/esptool
+
+Make sure that Python & PySerial are installed.
+
+Install firmware using
+
+esptool.py write_flash 0x0 ./firmware.bin
+
+

@@ -46,16 +46,20 @@ Version :: v1.0.1
 #define FILTERSETTLETIME 5000   
 #define ONE_WIRE_BUS 4
 
-typedef struct { int power1, temp1, value3, value4, vrms;} PayloadTX; 
+typedef struct { int power1, power2, power3, power4, temp1, vrms;} PayloadTX; 
 float roomTemperature = 0;
 unsigned long msgnum = 0;
 
 const int LEDpin = 9;   
 const int CT1 = 1; 
+const int CT2 = 1;  
+const int CT3 = 1;                                                      
+const int CT4 = 1;
+
 const float calibratedVoltage = 234.6;                                                                                
 boolean settled = false;
 
-EnergyMonitor ct1;                                          
+EnergyMonitor ct1, ct2, ct3, ct4;                                          
 PayloadTX emontx; 
 OneWire oneWire(ONE_WIRE_BUS);                                          
 DallasTemperature sensors(&oneWire); 
@@ -69,11 +73,15 @@ void setup()
   Serial.println("emonTX Shield using ESP8266 & DS18B20"); 
   Serial.println("Author: Martin Sidgreaves");
              
-  if (CT1) 
-  {
-    ct1.current(1, 60.606);                                     // Setup emonTX CT channel (channel, calibration)
-    ct1.voltage(0, calibratedVoltage, 1.7);
-  }
+  if (CT1) ct1.current(1, 60.606);                                     // Setup emonTX CT channel (ADC input, calibration)
+  if (CT2) ct2.current(2, 60.606);                                     // Calibration factor = CT ratio / burden resistance
+  if (CT3) ct3.current(3, 60.606);                                     // emonTx Shield Calibration factor = (100A / 0.05A) / 33 Ohms
+  if (CT4) ct4.current(4, 60.606);
+
+  if (CT1) ct1.voltage(0, 268.97, 1.7);                                // ct.voltageTX(ADC input, calibration, phase_shift) - make sure to select correct calibration for AC-AC adapter  http://openenergymonitor.org/emon/modules/emontx/firmware/calibration. Default set for Ideal Power adapter                                         
+  if (CT2) ct2.voltage(0, 268.97, 1.7);                                // 268.97 for the UK adapter, 260 for the Euro and 130 for the US.
+  if (CT3) ct3.voltage(0, 268.97, 1.7);
+  if (CT4) ct4.voltage(0, 268.97, 1.7);
 
   // Start the temp sensor
   sensors.begin();
@@ -89,15 +97,42 @@ void loop()
     sensors.requestTemperatures();      
     emontx.temp1 = sensors.getTempC(address_T1);        
 
-    // Return the power value
-    emontx.power1 = ct1.calcIrms(1480) * calibratedVoltage;
+    if (CT1) {
+        ct1.calcVI(20,2000);                                                  // Calculate all. No.of crossings, time-out 
+        emontx.power1 = ct1.realPower;
+        Serial.print(emontx.power1);                                         
+    }
+    
+    emontx.vrms = ct1.Vrms*100; 
+
+    if (CT2) {
+      ct2.calcVI(20,2000);                                                  // Calculate all. No.of crossings, time-out 
+      emontx.power2 = ct2.realPower;
+      Serial.print(" "); Serial.print(emontx.power2);
+    } 
+
+    if (CT3) {
+      ct3.calcVI(20,2000);                                                  // Calculate all. No.of crossings, time-out 
+      emontx.power3 = ct3.realPower;
+      Serial.print(" "); Serial.print(emontx.power3);
+    } 
+    
+    if (CT4) {
+      ct4.calcVI(20,2000);                                                  // Calculate all. No.of crossings, time-out 
+      emontx.power4 = ct4.realPower;
+      Serial.print(" "); Serial.print(emontx.power4);
+    } 
+
     msgnum++;
 
     // Build the return message
     Serial.print("MSG:"); Serial.print(msgnum);
     Serial.print(F(",P1:")); Serial.print(emontx.power1);  
+    Serial.print(F(",P2:")); Serial.print(emontx.power2);
+    Serial.print(F(",P3")); Serial.print(emontx.power3);
+    Serial.print(F(",P4:")); Serial.print(emontx.power4);
     Serial.print(F(",T1:")); Serial.print(emontx.temp1);        
-    Serial.print(F(",V1:")); Serial.print(ct1.Vrms);   
+    Serial.print(F(",V1:")); Serial.print(emontx.vrms);   
     Serial.println();                                       
     
     // Quick flash
