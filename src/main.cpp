@@ -23,6 +23,15 @@
   - DallasTemperature   -   https://github.com/milesburton/Arduino-Temperature-Control-Library
   - OneWire             -   https://github.com/PaulStoffregen/OneWire
 
+
+ESP8266 need to be loaded and configured with EmonEsp. This will allow your emonTX shield to 
+communicate with the outside world over Wifi. Please visit:
+
+https://github.com/openenergymonitor/EmonESP
+
+Configuration and setup is beyond the scope of this document however all the information you need
+can be found at the above URL
+
 ------------------------------------------------------------------------------------------------------------
 Connections between EmonTX & ESP8266
 
@@ -34,7 +43,7 @@ Rx                            ->          Rx
 
 -------------------------------------------------------------------------------------------------------------
 
-Version :: v1.0.1
+Version :: v1.1.0
 
 */
 
